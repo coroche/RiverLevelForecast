@@ -2,14 +2,17 @@
 class river:
     def __init__(self, data: dict) -> None:
         self.stationNum: int = data.get("stationNum")
-        self.CSVLocation: str = data.get("CSVLocation")
+        self.LevelCSV: str = data.get("LevelCSV")
+        self.RainfallCSV: str = data.get("RainfallCSV")
 
 dargle = river({
     "stationNum": 10051,
-    "CSVLocation": "Data\Dargle\Dargle.csv"
+    "LevelCSV": "Data\Dargle\DargleLevel.csv",
+    "RainfallCSV": "Data\Dargle\SallyGapRainFall.csv"
 })
 
 glens = river({
     "stationNum": 25309,
-    "CSVLocation": "Data\Glens\Glens.csv"
+    "LevelCSV": "Data\Glens\GlensLevel.csv",
+    "RainfallCSV": ""
 })

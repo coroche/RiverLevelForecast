@@ -61,6 +61,6 @@ def getLatestLevelData2(river: riverData.river, period: period) -> pd.DataFrame:
 
 def getHistoricLevelData(river: riverData.river) -> pd.DataFrame:
 
-    df = pd.read_csv(river.CSVLocation, skiprows = 10, parse_dates = ["#Timestamp"], delimiter = ";")
+    df = pd.read_csv(river.LevelCSV, skiprows = 10, parse_dates = ["#Timestamp"], delimiter = ";")
     df.columns = ['Timestamp'] + list(df.columns[1:]) #remove hash from column name
     return df
