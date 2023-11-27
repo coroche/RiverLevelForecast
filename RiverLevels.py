@@ -21,6 +21,7 @@ class period(Enum):
     week = 2
     month = 3
 
+
 def getLatestLevelData(river: riverData.river, period: period) -> pd.DataFrame:
     
     station = str(river.stationNum)
@@ -36,6 +37,7 @@ def getLatestLevelData(river: riverData.river, period: period) -> pd.DataFrame:
         raise SystemExit(ex)
    
     df = pd.read_csv(StringIO(response.text), dtype = {"datetime": str, "value": float}, parse_dates=["datetime"])
+    df.set_index('datetime', inplace=True)
     return df
 
 def getLatestLevelData2(river: riverData.river, period: period) -> pd.DataFrame:
@@ -55,7 +57,11 @@ def getLatestLevelData2(river: riverData.river, period: period) -> pd.DataFrame:
     data = [GaugeData(x) for x in json.loads(response.text)]
     levelData = [x for x in data if x.ts_shortname == "WEB.Cmd.P-Continuous.Absolute"][0]
     df = pd.DataFrame(levelData.data, columns = levelData.columns.split(","))
-    df["Timestamp"] = pd.to_datetime(df["Timestamp"])
+    df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+    #df['Timestamp'] = pd.to_datetime(df['Timestamp']).dt.tz_localize(None)
+    #df['Timestamp'] = df['Timestamp'].apply(lambda t: t.replace(tzinfo=None))
+    df.set_index('Timestamp', inplace=True)
+    df["MappedValue"] = df["Value"] - 72.026
     return df
 
 
@@ -63,4 +69,6 @@ def getHistoricLevelData(river: riverData.river) -> pd.DataFrame:
 
     df = pd.read_csv(river.LevelCSV, skiprows = 10, parse_dates = ["#Timestamp"], delimiter = ";")
     df.columns = ['Timestamp'] + list(df.columns[1:]) #remove hash from column name
+    df.set_index('Timestamp', inplace=True)
+    df["MappedValue"] = df["Value"] - 72.026
     return df
